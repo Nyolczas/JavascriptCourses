@@ -1,6 +1,6 @@
 nav {
   direction: rtl;
-  position: fixed;
+  position: relative;
   top: 0px;
   right: 0px;
 }
