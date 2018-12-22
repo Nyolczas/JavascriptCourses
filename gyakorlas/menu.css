@@ -41,10 +41,9 @@ nav {
     height: 70px;
     background: var(--menuBg);
     border-radius: 0px 0px 0px 460px;
-    z-index: -1;
 }
 
-.menu {
+.hambi {
     position: absolute;
     right: 15px;
     top: 7px;
@@ -80,17 +79,29 @@ nav {
 
 
 /* ================ menü ================ */
+.menusor {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    direction: rtl;
+    border: 1px;
+    border-color: red;
+}
 
-.menu-sor {
+ul {
     margin: 0;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    z-index: 1000;
+    
 }
 
-ul {
-    margin: 0;
+@media screen and (min-width: 480px) {
+    .menusor {
+        width: 320px;
+    }
 }
 
 ul li {
