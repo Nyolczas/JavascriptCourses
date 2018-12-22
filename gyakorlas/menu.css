@@ -1,0 +1,218 @@
+:root {
+    --menuBg: rgb(253, 53, 53);
+    --menuHover: rgb(19, 116, 207);
+    --feher: rgb(255, 255, 255);
+    --szurke: rgb(160, 160, 160);
+}
+
+body {
+    margin: 0px;
+}
+
+nav {
+    direction: rtl;
+    position: relative;
+    top: 0px;
+    right: 0px;
+}
+
+#box1 {
+    position: absolute;
+    -webkit-transition: 0.4s ease-in-out 0s;
+    transition: 0.4s ease-in-out 0s;
+    z-index: -1;
+}
+
+.anima {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--menuHover);
+    border-radius: 0px;
+}
+
+@media screen and (min-width: 480px) {
+    .anima {
+        width: 320px;
+    }
+}
+
+.nemani {
+    width: 80px;
+    height: 70px;
+    background: var(--menuBg);
+    border-radius: 0px 0px 0px 460px;
+    z-index: -1;
+}
+
+.menu {
+    position: absolute;
+    right: 15px;
+    top: 7px;
+    display: inline-block;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.bar1,
+.bar2,
+.bar3 {
+    width: 36px;
+    height: 5px;
+    background-color: var(--feher);
+    margin: 6px 0;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+.change .bar1 {
+    -webkit-transform: rotate(-45deg) translate(-8px, 8px);
+    transform: rotate(-45deg) translate(-8px, 8px);
+}
+
+.change .bar2 {
+    opacity: 0;
+}
+
+.change .bar3 {
+    -webkit-transform: rotate(45deg) translate(-8px, -8px);
+    transform: rotate(45deg) translate(-8px, -8px);
+}
+
+
+/* ================ menü ================ */
+
+.menu-sor {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+ul {
+    margin: 0;
+}
+
+ul li {
+    list-style: none;
+    padding: .8rem 0;
+    width: 100%;
+    text-align: center;
+    margin: auto;
+}
+
+ul li a {
+    text-decoration: none;
+    font-size: 1rem;
+    text-transform: uppercase;
+    position: relative;
+    padding: .5rem;
+    transition: .2s;
+    color: var(--feher);
+}
+
+.active>a {
+    color: var(--szurke);
+    cursor: default;
+}
+
+/* ================ menü vége ================ */
+/* ================ menü keret effekt ================ */
+
+ul li a span:first-child:before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 12px;
+    width: 8px;
+    height: 8px;
+    background: transparent;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    transition: .2s;
+    opacity: 0;
+}
+
+ul li a span:first-child:after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    right: 12px;
+    width: 8px;
+    height: 8px;
+    background: transparent;
+    border-top: 2px solid #fff;
+    border-right: 2px solid #fff;
+    transition: .2s;
+    opacity: 0;
+}
+
+ul li a span:last-child:before {
+    content: '';
+    position: absolute;
+    bottom: 15px;
+    left: 12px;
+    width: 8px;
+    height: 8px;
+    background: transparent;
+    border-bottom: 2px solid #fff;
+    border-left: 2px solid #fff;
+    transition: .2s;
+    opacity: 0;
+}
+
+ul li a span:last-child:after {
+    content: '';
+    position: absolute;
+    bottom: 15px;
+    right: 12px;
+    width: 8px;
+    height: 8px;
+    background: transparent;
+    border-bottom: 2px solid #fff;
+    border-right: 2px solid #fff;
+    transition: .2s;
+    opacity: 0;
+}
+
+ul li a:hover span:first-child:before {
+    top: 0px;
+    left: 0px;
+    opacity: 1;
+}
+
+ul li a:hover span:first-child:after {
+    top: 0px;
+    right: 0px;
+    opacity: 1;
+}
+
+ul li a:hover span:last-child:before {
+    bottom: 0px;
+    left: 0px;
+    opacity: 1;
+}
+
+ul li a:hover span:last-child:after {
+    bottom: 0px;
+    right: 0px;
+    opacity: 1;
+}
+
+.active>a span:first-child:before {
+    display: none;
+}
+
+.active>a span:first-child:after {
+    display: none;
+}
+
+.active>a span:last-child:before {
+    display: none;
+}
+
+.active>a span:last-child:after {
+    display: none;
+}
+
+/* ================ menü keret effekt vége ================ */
