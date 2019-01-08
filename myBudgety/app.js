@@ -18,18 +18,24 @@ var UIController = (function(){
 var controller = (function(budgetCtrl, UICtrl) {
 
     document.querySelector('.add__btn').addEventListener('click', function() {
-        console.log('rákattintottál a gombra.')
+        //console.log('rákattintottál a gombra.')
+
+        //- 1. Beadott adatok felvétele
+    
+        //- 2. Elemek átadása a Budget controllernek
+    
+        //- 3. Elemek hozzáadása az UI-hoz.
+    
+        //- 4. Budget kiszámolása
+    
+        //- 5. Budget megjelenítése
     });
 
-    //- 1. Beadott adatok felvétele
+    document.addEventListener('keypress', function(event){
 
-    //- 2. Elemek átadása a Budget controllernek
+        console.log(event);
 
-    //- 3. Elemek hozzáadása az UI-hoz.
-
-    //- 4. Budget számolása
-
-    //- 5.
-
+    });
 
 })(budgetController, UIController);
+
