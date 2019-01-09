@@ -99,6 +99,18 @@ var UIController = (function () {
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
         },
 
+        clearFields: function() { // kitisztítja a beírt adatokat
+            var fields, fieldsArr;
+            fields = document.querySelectorAll(DOMstrings.inputDescription + ', ' + DOMstrings.inputValue);
+
+            var fieldsArr = Array.prototype.slice.call(fields); // a listát tömbbé alakítja
+
+            fieldsArr.forEach(function(current, index, array) {
+                current.value = "";
+            }); 
+
+        },
+
         getDomstrings: function () { // publikussá teszi a DOMstrings változókat
             return DOMstrings;
         }
@@ -139,14 +151,17 @@ var controller = (function (budgetCtrl, UICtrl) {
         //- 3. Elemek hozzáadása az UI-hoz.
         UICtrl.addListItem(newItem, input.type);
 
-        //- 4. Budget kiszámolása
+        //- 4. Kiüríti a beviteli mezőket.
+        UICtrl.clearFields();
 
-        //- 5. Budget megjelenítése
+        //- 5. Budget kiszámolása
+
+        //- 6. Budget megjelenítése
     };
 
     return { // a setupEventListeners függvény pulikussá tétele.
         init: function () {
-            console.log('Az alkalmazás elindult.');
+            //console.log('Az alkalmazás elindult.');
             setupEventListeners();
         }
     };
