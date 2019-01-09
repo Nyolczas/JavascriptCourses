@@ -73,7 +73,7 @@ var UIController = (function () {
             return {
                 type: document.querySelector(DOMstrings.inputType).value, // inc vagy exp lehet
                 description: document.querySelector(DOMstrings.inputDescription).value,
-                value: document.querySelector(DOMstrings.inputValue).value
+                value: parseFloat(document.querySelector(DOMstrings.inputValue).value)
             };
         },
 
@@ -137,6 +137,16 @@ var controller = (function (budgetCtrl, UICtrl) {
         });
     };
 
+    var updateBudget = function() {
+
+        //- 1. Budget kiszámolása
+
+        //- 2. Visszaadja a Budget-et.
+
+        //- 3. Budget megjelenítése
+
+    };
+
     var ctrlAddItem = function () {
         //console.log('Működik!');
         var input, newItem;
@@ -145,18 +155,21 @@ var controller = (function (budgetCtrl, UICtrl) {
         input = UICtrl.getInput();
         //console.log(input);
 
-        //- 2. Elemek átadása a Budget controllernek
-        newItem = budgetCtrl.addItem(input.type, input.description, input.value);
+        if (input.description !== "" && !isNaN(input.value) && input.value > 0) {
 
-        //- 3. Elemek hozzáadása az UI-hoz.
-        UICtrl.addListItem(newItem, input.type);
+            //- 2. Elemek átadása a Budget controllernek
+            newItem = budgetCtrl.addItem(input.type, input.description, input.value);
+    
+            //- 3. Elemek hozzáadása az UI-hoz.
+            UICtrl.addListItem(newItem, input.type);
+    
+            //- 4. Kiüríti a beviteli mezőket.
+            UICtrl.clearFields();
+    
+            //- 5. Kiszámolja és frissíti a Budget-et.
+            updateBudget();
+        }
 
-        //- 4. Kiüríti a beviteli mezőket.
-        UICtrl.clearFields();
-
-        //- 5. Budget kiszámolása
-
-        //- 6. Budget megjelenítése
     };
 
     return { // a setupEventListeners függvény pulikussá tétele.
