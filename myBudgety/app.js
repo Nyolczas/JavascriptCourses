@@ -1,18 +1,22 @@
+//===================================================================================================================
 //--- BUDGET CONTROLLER
 var budgetController = (function () {
 
+    // privát: költség osztály
     var Expense = function (id, description, value) {
         this.id = id;
         this.description = description;
         this.value = value;
     };
 
+    // privát: bevétel osztály
     var Income = function (id, description, value) {
         this.id = id;
         this.description = description;
         this.value = value;
     };
 
+    // privát: globális adat modell
     var data = {
         allItems: {
             exp: [],
@@ -21,14 +25,27 @@ var budgetController = (function () {
         totals: {
             exp: 0,
             inc: 0
-        }
+        },
+        budget: 0,
+        percentage: -1
     };
 
-    return { // publikussá teszi az új elem hozzáadását.
-        addItem: function (type, des, val) {
+    // privát: szumma számolása
+    var calculateTotal = function(type) {
+        var sum = 0;
+        data.allItems[type].forEach(function(cur) {
+            sum += cur.value;
+        });
+        data.totals[type] = sum;
+    };
+
+    // publikus osztályok
+    return { 
+        addItem: function (type, des, val) { // publikus: elem hozzáadása
             var newItem, ID;
 
             if (data.allItems[type].length > 0) {
+
                 // ID készítés: megszámolja, hogy hány elem van már, és ennek megfelelően állítja be az ID-t.
                 ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
             } else {
@@ -49,13 +66,42 @@ var budgetController = (function () {
             return newItem;
         },
 
-        testing: function () {
+        calculateBudget: function() { // publikus: budget számolása
+
+            // össz bevétel és össz kiadás kiszámolása
+            calculateTotal('exp');
+            calculateTotal('inc');
+
+            // egyenleg kiszámítása: bevétel - kiadás
+            data.budget = data.totals.inc - data.totals.exp;
+
+            // százalékos költségek számítása a bevétel alapján
+            if ( data.totals.inc > 0) { // nullával nem oszt
+                data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
+            } else {
+                data.percentage = -1;  // ha nincs bevétel, akkor -1-et ad vissza
+            }
+
+        },
+
+        // visszaadja az értékeket egy objektumban
+        getBudget: function() {
+            return {
+                budget: data.budget,
+                totalInc: data.totals.inc,
+                totalExp: data.totals.exp,
+                percent: data.percentage
+            }
+        },
+
+        testing: function () { // publikus: console-os teszteléshez
             console.log(data);
         }
     };
 
 })();
 
+//===================================================================================================================
 //--- UI CONTROLLER
 var UIController = (function () {
 
@@ -68,8 +114,11 @@ var UIController = (function () {
         expenseContainer: '.expenses__list'
     };
 
-    return { // publikussá teszi a változókat
-        getInput: function () { // begyűjti a beadott adatokat.
+    // UI controller publikus metódusok
+    return { 
+
+        // begyűjti a beírt adatokat.
+        getInput: function () { 
             return {
                 type: document.querySelector(DOMstrings.inputType).value, // inc vagy exp lehet
                 description: document.querySelector(DOMstrings.inputDescription).value,
@@ -77,6 +126,7 @@ var UIController = (function () {
             };
         },
 
+        // bevételi és kiadási tételek megjelenítése
         addListItem: function (obj, type) {
             var html, newHtml, element;
 
@@ -99,7 +149,8 @@ var UIController = (function () {
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
         },
 
-        clearFields: function() { // kitisztítja a beírt adatokat
+        // Az input mezők alaphelyzetbe állítása
+        clearFields: function() { 
             var fields, fieldsArr;
             fields = document.querySelectorAll(DOMstrings.inputDescription + ', ' + DOMstrings.inputValue);
 
@@ -111,12 +162,14 @@ var UIController = (function () {
 
         },
 
-        getDomstrings: function () { // publikussá teszi a DOMstrings változókat
+        // a DOMstrings változók publikussá tétele
+        getDomstrings: function () { 
             return DOMstrings;
         }
     };
 })();
 
+//===================================================================================================================
 //--- GLOBAL APP CONTROLLER
 var controller = (function (budgetCtrl, UICtrl) {
 
@@ -137,16 +190,21 @@ var controller = (function (budgetCtrl, UICtrl) {
         });
     };
 
+    // Fejléc elemeinek frissítése
     var updateBudget = function() {
 
-        //- 1. Budget kiszámolása
+        //- 1. Kiszámoltatja a Budgetet
+        budgetCtrl.calculateBudget();
 
-        //- 2. Visszaadja a Budget-et.
+        //- 2. Lekérdezi a Budget értékeit.
+        var budget = budgetCtrl.getBudget();
 
-        //- 3. Budget megjelenítése
+        //- 3. Megjeleníti az értékeket.
+        console.log(budget);
 
     };
 
+    // lábléc elemeinek megjelenítése
     var ctrlAddItem = function () {
         //console.log('Működik!');
         var input, newItem;
@@ -180,5 +238,7 @@ var controller = (function (budgetCtrl, UICtrl) {
     };
 
 })(budgetController, UIController);
+
+//===================================================================================================================
 
 controller.init();
