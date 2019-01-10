@@ -254,6 +254,10 @@ var controller = (function (budgetCtrl, UICtrl) {
         init: function () {
             //console.log('Az alkalmazás elindult.');
             setupEventListeners();
+            UICtrl.displayBudget({budget: 0,
+                totalInc: 0,
+                totalExp: 0,
+                percent: -1});
         }
     };
 
