@@ -105,13 +105,18 @@ var budgetController = (function () {
 //--- UI CONTROLLER
 var UIController = (function () {
 
-    var DOMstrings = { // ez a lista gyűjti a bemeneti sztingeket
+    // DOM elnevezések listája
+    var DOMstrings = { 
         inputType: '.add__type',
         inputDescription: '.add__description',
         inputValue: '.add__value',
         inputBtn: '.add__btn',
         incomeContainer: '.income__list',
-        expenseContainer: '.expenses__list'
+        expenseContainer: '.expenses__list',
+        budgetLabel: '.budget__value',
+        incomeLabel: '.budget__income--value',
+        expenseLabel: '.budget__expenses--value',
+        percentageLabel: '.budget__expenses--percentage'
     };
 
     // UI controller publikus metódusok
@@ -162,6 +167,16 @@ var UIController = (function () {
 
         },
 
+        // fejléc elemeinek megjelenítése
+        displayBudget: function(obj) {
+
+            document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
+            document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
+            document.querySelector(DOMstrings.expenseLabel).textContent = obj.totalExp;
+            document.querySelector(DOMstrings.percentageLabel).textContent = obj.percent;
+
+        },
+
         // a DOMstrings változók publikussá tétele
         getDomstrings: function () { 
             return DOMstrings;
@@ -200,7 +215,8 @@ var controller = (function (budgetCtrl, UICtrl) {
         var budget = budgetCtrl.getBudget();
 
         //- 3. Megjeleníti az értékeket.
-        console.log(budget);
+        //console.log(budget);
+        UICtrl.displayBudget(budget);
 
     };
 
