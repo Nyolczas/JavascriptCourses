@@ -166,6 +166,30 @@ var UIController = (function () {
         expensesPercLabel: '.item__percentage'
     };
 
+    var formatNumber = function(num, type) {
+        var numSplit, int, dec;
+
+        num = Math.abs(num);
+
+        // 2 százalékpontos megjelenítés (string-et ad vissza)
+        num = num.toFixed(2); 
+
+        // 1 000 érték szóközökkel
+        numSplit = num.split('.');
+
+        int = numSplit[0];
+        if (int.length > 3) {
+            int = int.substr(0, int.length - 3) + ' ' + int.substr(int.length-3, int.length-2);
+        }
+
+        dec = numSplit[1];
+
+        // + vagy - a számok elé
+
+        return (type === 'exp' ? '-' : '+') + ' ' + int +'.' + dec;
+
+    };
+
     // UI controller publikus metódusok
     return { 
 
@@ -194,7 +218,7 @@ var UIController = (function () {
             // A placeholderek lecserélése az aktuális adatokra
             newHtml = html.replace('%id%', obj.id);
             newHtml = newHtml.replace('%description%',obj.description);
-            newHtml = newHtml.replace('%value%',obj.value);
+            newHtml = newHtml.replace('%value%', formatNumber(obj.value, type));
 
             // A HTML beszúrása a DOM-ba
             // help --- https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML
@@ -223,9 +247,11 @@ var UIController = (function () {
         // fejléc elemeinek megjelenítése
         displayBudget: function(obj) {
 
-            document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
-            document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
-            document.querySelector(DOMstrings.expenseLabel).textContent = obj.totalExp;
+            obj.budget > 0 ? type = 'inc' : type = 'exp';
+
+            document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget, type);
+            document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(obj.totalInc, 'inc');
+            document.querySelector(DOMstrings.expenseLabel).textContent = formatNumber(obj.totalExp, 'exp');
             
             if (obj.percent > 0) {
                 document.querySelector(DOMstrings.percentageLabel).textContent = obj.percent + '%';
@@ -254,27 +280,6 @@ var UIController = (function () {
                 }
             });
         },
-
-        formatNumber: function(num, type) {
-            var numSplit, int, dec;
-
-            num = Math.abs(num);
-
-            // 2 százalékpontos megjelenítés (string-et ad vissza)
-            num = num.toFixed(2); 
-
-            // 1 000 érték szóközökkel
-            numSplit = num.split('.');
-
-            int = numSplit[0];
-            if (int.length > 3) {
-                int = int.substr(0, int.length - 3) + ' ' + int.substr(int.length - 4, 2);
-            }
-
-            dec = numSplit[1];
-            // + vagy - a számok elé
-
-        }, 
 
         // a DOMstrings változók publikussá tétele
         getDomstrings: function () { 
