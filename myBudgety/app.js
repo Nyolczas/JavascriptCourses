@@ -162,7 +162,8 @@ var UIController = (function () {
         incomeLabel: '.budget__income--value',
         expenseLabel: '.budget__expenses--value',
         percentageLabel: '.budget__expenses--percentage',
-        container: '.container'
+        container: '.container',
+        expensesPercLabel: '.item__percentage'
     };
 
     // UI controller publikus metódusok
@@ -233,6 +234,27 @@ var UIController = (function () {
             }
         },
 
+        // megkapja a százalékokat tömbben, és megjeleníti az összes elemen az értékeket
+        displayPercentages: function(percentages) {
+
+            var fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
+
+            
+            var nodeListForEach = function(list, callback){
+                for (var i = 0; i < list.length; i++) {
+                    callback(list[i], i);
+                }
+            };
+
+            nodeListForEach(fields, function(current, index) {
+                if (percentages[index] > 0) {
+                    current.textContent = percentages[index] + '%';
+                } else {
+                    current.textContent = '---';
+                }
+            });
+        },
+
         // a DOMstrings változók publikussá tétele
         getDomstrings: function () { 
             return DOMstrings;
@@ -287,7 +309,8 @@ var controller = (function (budgetCtrl, UICtrl) {
         var percentages = budgetCtrl.getPercentages();
 
         // 3. Az UI frissítése az új százalékkal
-        console.log(percentages);
+        //console.log(percentages);
+        UICtrl.displayPercentages(percentages);
     };
 
     // tétel elemek megjelenítése
