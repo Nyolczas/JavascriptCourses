@@ -116,7 +116,8 @@ var UIController = (function () {
         budgetLabel: '.budget__value',
         incomeLabel: '.budget__income--value',
         expenseLabel: '.budget__expenses--value',
-        percentageLabel: '.budget__expenses--percentage'
+        percentageLabel: '.budget__expenses--percentage',
+        container: '.container'
     };
 
     // UI controller publikus metódusok
@@ -207,6 +208,9 @@ var controller = (function (budgetCtrl, UICtrl) {
                 ctrlAddItem();
             }
         });
+
+        // esemény delegáció az elemek törléséhez
+        document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
     };
 
     // Fejléc elemeinek frissítése
@@ -224,7 +228,7 @@ var controller = (function (budgetCtrl, UICtrl) {
 
     };
 
-    // lábléc elemeinek megjelenítése
+    // tétel elemek megjelenítése
     var ctrlAddItem = function () {
         //console.log('Működik!');
         var input, newItem;
@@ -233,6 +237,7 @@ var controller = (function (budgetCtrl, UICtrl) {
         input = UICtrl.getInput();
         //console.log(input);
 
+        // validálás
         if (input.description !== "" && !isNaN(input.value) && input.value > 0) {
 
             //- 2. Elemek átadása a Budget controllernek
@@ -247,6 +252,29 @@ var controller = (function (budgetCtrl, UICtrl) {
             //- 5. Kiszámolja és frissíti a Budget-et.
             updateBudget();
         }
+
+    };
+
+    // elemek törlése
+    var ctrlDeleteItem = function(event) {
+
+        var itemID, splitID, type, ID;
+        // DOM Traversing  
+        // console.log(event.target.parentNode.parentNode.parentNode.parentNode.id);
+        itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+         
+        // csak a keresett elemnek van egyedül ID-ja.
+        if (itemID) {
+            splitID = itemID.split('-');
+            type = splitID[0];
+            ID = splitID[1];
+        }
+
+        // 1. Az elem törlése az adatstruktúrából
+
+        // 2. Az elem törlése az UI-ról
+
+        // 3. A Budget frissítése és megjelenítése
 
     };
 
