@@ -7,6 +7,19 @@ var budgetController = (function () {
         this.id = id;
         this.description = description;
         this.value = value;
+        this.percentage = -1;
+    };
+
+    Expense.prototype.calculatePercentage = function(totalIncome) {
+        if (totalIncome > 0){
+            this.percentage = Math.round((this.value / totalIncome) * 100);
+        } else {
+            this.percentage = -1;
+        }
+    };
+
+    Expense.prototype.getPercentage = function() {
+        return this.percentage;
     };
 
     // privát: bevétel osztály
@@ -99,6 +112,21 @@ var budgetController = (function () {
                 data.percentage = -1;  // ha nincs bevétel, akkor -1-et ad vissza
             }
 
+        },
+
+        calculatePercentages: function() {
+
+            data.allItems.exp.forEach(function(cur) {
+                cur.calculatePercentage(data.totals.inc);
+            });
+
+        },
+
+        getPercentages: function() {
+            var allPercentages = data.allItems.exp.map(function(cur) {
+                return cur.getPercentage();
+            });
+            return allPercentages;
         },
 
         // visszaadja az értékeket egy objektumban
@@ -251,6 +279,17 @@ var controller = (function (budgetCtrl, UICtrl) {
 
     };
 
+    var updatePercentages = function() {
+        // 1. Százalék számíttatás
+        budgetCtrl.calculatePercentages();
+
+        // 2. Százalék beolvasása a budget controllerből
+        var percentages = budgetCtrl.getPercentages();
+
+        // 3. Az UI frissítése az új százalékkal
+        console.log(percentages);
+    };
+
     // tétel elemek megjelenítése
     var ctrlAddItem = function () {
         //console.log('Működik!');
@@ -274,6 +313,9 @@ var controller = (function (budgetCtrl, UICtrl) {
     
             //- 5. Kiszámolja és frissíti a Budget-et.
             updateBudget();
+
+            //- 6. kiszámolja és frissíti a százalékokat.
+            updatePercentages();
         }
 
     };
@@ -301,6 +343,9 @@ var controller = (function (budgetCtrl, UICtrl) {
 
         // 3. A Budget frissítése és megjelenítése
         updateBudget();
+
+        // 4. kiszámolja és frissíti a százalékokat.
+        updatePercentages();
 
     };
 
