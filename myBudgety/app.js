@@ -255,6 +255,27 @@ var UIController = (function () {
             });
         },
 
+        formatNumber: function(num, type) {
+            var numSplit, int, dec;
+
+            num = Math.abs(num);
+
+            // 2 százalékpontos megjelenítés (string-et ad vissza)
+            num = num.toFixed(2); 
+
+            // 1 000 érték szóközökkel
+            numSplit = num.split('.');
+
+            int = numSplit[0];
+            if (int.length > 3) {
+                int = int.substr(0, int.length - 3) + ' ' + int.substr(int.length - 4, 2);
+            }
+
+            dec = numSplit[1];
+            // + vagy - a számok elé
+
+        }, 
+
         // a DOMstrings változók publikussá tétele
         getDomstrings: function () { 
             return DOMstrings;
