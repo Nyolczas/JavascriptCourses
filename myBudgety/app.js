@@ -66,6 +66,23 @@ var budgetController = (function () {
             return newItem;
         },
 
+        deleteItem: function(type, id) { 
+            var ids, index;
+            //data.allItems[type][id]; ez nem működik, mert a tömbben elfoglalt index nem feltétlenül egyezik meg az id-vel.
+
+            // a map visszaad egy új tömböt, ami tartalmazza az id-ket
+            ids = data.allItems[type].map(function(current) {
+                return current.id;
+            }); 
+            // megkeresi az adott ID-jű elemet a tömbben
+            index = ids.indexOf(id);
+
+            // ha létezik, akkor kitörli a tömbből.
+            if (index !== -1) {
+                data.allItems[type].splice(index, 1);
+            }
+        },
+
         calculateBudget: function() { // publikus: budget számolása
 
             // össz bevétel és össz kiadás kiszámolása
@@ -153,6 +170,12 @@ var UIController = (function () {
             // A HTML beszúrása a DOM-ba
             // help --- https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
+        },
+
+        deleteListItem: function(selectorID) {
+            var el = document.getElementById(selectorID);
+            el.parentNode.removeChild(el);
+
         },
 
         // Az input mezők alaphelyzetbe állítása
@@ -267,14 +290,17 @@ var controller = (function (budgetCtrl, UICtrl) {
         if (itemID) {
             splitID = itemID.split('-');
             type = splitID[0];
-            ID = splitID[1];
+            ID = parseInt(splitID[1]);
         }
 
         // 1. Az elem törlése az adatstruktúrából
+        budgetController.deleteItem(type, ID);
 
         // 2. Az elem törlése az UI-ról
+        UICtrl.deleteListItem(itemID);
 
         // 3. A Budget frissítése és megjelenítése
+        updateBudget();
 
     };
 
