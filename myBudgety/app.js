@@ -10,15 +10,15 @@ var budgetController = (function () {
         this.percentage = -1;
     };
 
-    Expense.prototype.calculatePercentage = function(totalIncome) {
-        if (totalIncome > 0){
+    Expense.prototype.calculatePercentage = function (totalIncome) {
+        if (totalIncome > 0) {
             this.percentage = Math.round((this.value / totalIncome) * 100);
         } else {
             this.percentage = -1;
         }
     };
 
-    Expense.prototype.getPercentage = function() {
+    Expense.prototype.getPercentage = function () {
         return this.percentage;
     };
 
@@ -44,16 +44,16 @@ var budgetController = (function () {
     };
 
     // privát: szumma számolása
-    var calculateTotal = function(type) {
+    var calculateTotal = function (type) {
         var sum = 0;
-        data.allItems[type].forEach(function(cur) {
+        data.allItems[type].forEach(function (cur) {
             sum += cur.value;
         });
         data.totals[type] = sum;
     };
 
     // publikus osztályok
-    return { 
+    return {
         addItem: function (type, des, val) { // publikus: elem hozzáadása
             var newItem, ID;
 
@@ -79,14 +79,14 @@ var budgetController = (function () {
             return newItem;
         },
 
-        deleteItem: function(type, id) { 
+        deleteItem: function (type, id) {
             var ids, index;
             //data.allItems[type][id]; ez nem működik, mert a tömbben elfoglalt index nem feltétlenül egyezik meg az id-vel.
 
             // a map visszaad egy új tömböt, ami tartalmazza az id-ket
-            ids = data.allItems[type].map(function(current) {
+            ids = data.allItems[type].map(function (current) {
                 return current.id;
-            }); 
+            });
             // megkeresi az adott ID-jű elemet a tömbben
             index = ids.indexOf(id);
 
@@ -96,7 +96,7 @@ var budgetController = (function () {
             }
         },
 
-        calculateBudget: function() { // publikus: budget számolása
+        calculateBudget: function () { // publikus: budget számolása
 
             // össz bevétel és össz kiadás kiszámolása
             calculateTotal('exp');
@@ -106,31 +106,31 @@ var budgetController = (function () {
             data.budget = data.totals.inc - data.totals.exp;
 
             // százalékos költségek számítása a bevétel alapján
-            if ( data.totals.inc > 0) { // nullával nem oszt
+            if (data.totals.inc > 0) { // nullával nem oszt
                 data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
             } else {
-                data.percentage = -1;  // ha nincs bevétel, akkor -1-et ad vissza
+                data.percentage = -1; // ha nincs bevétel, akkor -1-et ad vissza
             }
 
         },
 
-        calculatePercentages: function() {
+        calculatePercentages: function () {
 
-            data.allItems.exp.forEach(function(cur) {
+            data.allItems.exp.forEach(function (cur) {
                 cur.calculatePercentage(data.totals.inc);
             });
 
         },
 
-        getPercentages: function() {
-            var allPercentages = data.allItems.exp.map(function(cur) {
+        getPercentages: function () {
+            var allPercentages = data.allItems.exp.map(function (cur) {
                 return cur.getPercentage();
             });
             return allPercentages;
         },
 
         // visszaadja az értékeket egy objektumban
-        getBudget: function() {
+        getBudget: function () {
             return {
                 budget: data.budget,
                 totalInc: data.totals.inc,
@@ -151,7 +151,7 @@ var budgetController = (function () {
 var UIController = (function () {
 
     // DOM elnevezések listája
-    var DOMstrings = { 
+    var DOMstrings = {
         inputType: '.add__type',
         inputDescription: '.add__description',
         inputValue: '.add__value',
@@ -163,38 +163,46 @@ var UIController = (function () {
         expenseLabel: '.budget__expenses--value',
         percentageLabel: '.budget__expenses--percentage',
         container: '.container',
-        expensesPercLabel: '.item__percentage'
+        expensesPercLabel: '.item__percentage',
+        dateLabel: '.budget__title--month'
     };
 
-    var formatNumber = function(num, type) {
+    var formatNumber = function (num, type) {
         var numSplit, int, dec;
 
         num = Math.abs(num);
 
         // 2 százalékpontos megjelenítés (string-et ad vissza)
-        num = num.toFixed(2); 
+        num = num.toFixed(2);
 
         // 1 000 érték szóközökkel
         numSplit = num.split('.');
 
         int = numSplit[0];
         if (int.length > 3) {
-            int = int.substr(0, int.length - 3) + ' ' + int.substr(int.length-3, int.length-2);
+            int = int.substr(0, int.length - 3) + ' ' + int.substr(int.length - 3, int.length);
         }
 
         dec = numSplit[1];
 
         // + vagy - a számok elé
 
-        return (type === 'exp' ? '-' : '+') + ' ' + int +'.' + dec;
+        return (type === 'exp' ? '-' : '+') + ' ' + int + '.' + dec;
 
     };
 
+    // foreach helper: funkció végrehajtása a tömb tagjain.
+    var nodeListForEach = function (list, callback) {
+        for (var i = 0; i < list.length; i++) {
+            callback(list[i], i);
+        }
+    };
+
     // UI controller publikus metódusok
-    return { 
+    return {
 
         // begyűjti a beírt adatokat.
-        getInput: function () { 
+        getInput: function () {
             return {
                 type: document.querySelector(DOMstrings.inputType).value, // inc vagy exp lehet
                 description: document.querySelector(DOMstrings.inputDescription).value,
@@ -217,7 +225,7 @@ var UIController = (function () {
 
             // A placeholderek lecserélése az aktuális adatokra
             newHtml = html.replace('%id%', obj.id);
-            newHtml = newHtml.replace('%description%',obj.description);
+            newHtml = newHtml.replace('%description%', obj.description);
             newHtml = newHtml.replace('%value%', formatNumber(obj.value, type));
 
             // A HTML beszúrása a DOM-ba
@@ -225,34 +233,34 @@ var UIController = (function () {
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
         },
 
-        deleteListItem: function(selectorID) {
+        deleteListItem: function (selectorID) {
             var el = document.getElementById(selectorID);
             el.parentNode.removeChild(el);
 
         },
 
         // Az input mezők alaphelyzetbe állítása
-        clearFields: function() { 
+        clearFields: function () {
             var fields, fieldsArr;
             fields = document.querySelectorAll(DOMstrings.inputDescription + ', ' + DOMstrings.inputValue);
 
             var fieldsArr = Array.prototype.slice.call(fields); // a listát tömbbé alakítja
 
-            fieldsArr.forEach(function(current, index, array) {
+            fieldsArr.forEach(function (current, index, array) {
                 current.value = "";
-            }); 
+            });
 
         },
 
         // fejléc elemeinek megjelenítése
-        displayBudget: function(obj) {
+        displayBudget: function (obj) {
 
             obj.budget > 0 ? type = 'inc' : type = 'exp';
 
             document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget, type);
             document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(obj.totalInc, 'inc');
             document.querySelector(DOMstrings.expenseLabel).textContent = formatNumber(obj.totalExp, 'exp');
-            
+
             if (obj.percent > 0) {
                 document.querySelector(DOMstrings.percentageLabel).textContent = obj.percent + '%';
             } else {
@@ -261,18 +269,11 @@ var UIController = (function () {
         },
 
         // megkapja a százalékokat tömbben, és megjeleníti az összes elemen az értékeket
-        displayPercentages: function(percentages) {
+        displayPercentages: function (percentages) {
 
             var fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
 
-            
-            var nodeListForEach = function(list, callback){
-                for (var i = 0; i < list.length; i++) {
-                    callback(list[i], i);
-                }
-            };
-
-            nodeListForEach(fields, function(current, index) {
+            nodeListForEach(fields, function (current, index) {
                 if (percentages[index] > 0) {
                     current.textContent = percentages[index] + '%';
                 } else {
@@ -283,11 +284,34 @@ var UIController = (function () {
 
         // idő megjelenítése
         displayMonth: function () {
+            var now, year, month, months;
+            months = ['Januárjában', 'Februárjában', 'Márciusában', 'Áprilisában', 'Májusában', 'Júniusában', 'Júliusában', 'Augusztusában', 'Szeptemberében', 'Októberében', 'Novemberében', 'Decemberében'];
+            now = new Date();
+            // var christmas = new Date(2018, 11, 25);
+            year = now.getFullYear();
+            month = now.getMonth();
+            document.querySelector(DOMstrings.dateLabel).textContent = year + ' ' + months[month];
+        },
 
+        // a beviteli mezők keretszínének megváltoztatása
+        changedType: function () {
+
+            var fields = document.querySelectorAll(
+                DOMstrings.inputType + ',' +
+                DOMstrings.inputDescription + ',' +
+                DOMstrings.inputValue
+            );
+
+            nodeListForEach(fields, function(cur) {
+                cur.classList.toggle('red-focus');
+            });
+
+            // gomb színének megváltoztatása
+            document.querySelector(DOMstrings.inputBtn).classList.toggle('red');
         },
 
         // a DOMstrings változók publikussá tétele
-        getDomstrings: function () { 
+        getDomstrings: function () {
             return DOMstrings;
         }
     };
@@ -315,10 +339,12 @@ var controller = (function (budgetCtrl, UICtrl) {
 
         // esemény delegáció az elemek törléséhez
         document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
+        // kijelölés a beviteli mezők keretszínének megváltoztatásához
+        document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType);
     };
 
     // Fejléc elemeinek frissítése
-    var updateBudget = function() {
+    var updateBudget = function () {
 
         //- 1. Kiszámoltatja a Budgetet
         budgetCtrl.calculateBudget();
@@ -332,7 +358,7 @@ var controller = (function (budgetCtrl, UICtrl) {
 
     };
 
-    var updatePercentages = function() {
+    var updatePercentages = function () {
         // 1. Százalék számíttatás
         budgetCtrl.calculatePercentages();
 
@@ -358,13 +384,13 @@ var controller = (function (budgetCtrl, UICtrl) {
 
             //- 2. Elemek átadása a Budget controllernek
             newItem = budgetCtrl.addItem(input.type, input.description, input.value);
-    
+
             //- 3. Elemek hozzáadása az UI-hoz.
             UICtrl.addListItem(newItem, input.type);
-    
+
             //- 4. Kiüríti a beviteli mezőket.
             UICtrl.clearFields();
-    
+
             //- 5. Kiszámolja és frissíti a Budget-et.
             updateBudget();
 
@@ -375,13 +401,13 @@ var controller = (function (budgetCtrl, UICtrl) {
     };
 
     // elemek törlése
-    var ctrlDeleteItem = function(event) {
+    var ctrlDeleteItem = function (event) {
 
         var itemID, splitID, type, ID;
         // DOM Traversing  
         // console.log(event.target.parentNode.parentNode.parentNode.parentNode.id);
         itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
-         
+
         // csak a keresett elemnek van egyedül ID-ja.
         if (itemID) {
             splitID = itemID.split('-');
@@ -406,11 +432,15 @@ var controller = (function (budgetCtrl, UICtrl) {
     return { // a setupEventListeners függvény pulikussá tétele.
         init: function () {
             //console.log('Az alkalmazás elindult.');
+
             setupEventListeners();
-            UICtrl.displayBudget({budget: 0,
+            UICtrl.displayMonth();
+            UICtrl.displayBudget({
+                budget: 0,
                 totalInc: 0,
                 totalExp: 0,
-                percent: -1});
+                percent: -1
+            });
         }
     };
 
