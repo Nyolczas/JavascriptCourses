@@ -281,6 +281,11 @@ var UIController = (function () {
             });
         },
 
+        // idő megjelenítése
+        displayMonth: function () {
+
+        },
+
         // a DOMstrings változók publikussá tétele
         getDomstrings: function () { 
             return DOMstrings;
