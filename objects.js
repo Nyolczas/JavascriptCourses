@@ -11,12 +11,11 @@
      isMarried: false,
      
      calcAge: function() {
-         var now = new Date();
-         var thisYear = now.getFullYear();
-         this.age = thisYear - this.birthYear;
+         var now = new Date().getFullYear();
+         this.age = now - this.birthYear;
          return this.age;
      }
  };
 
- console.log(`John born in ${john.birthYear} , and he is ${john.calcAge(john.birthYear)} years old.`);
+ console.log(`John born in ${john.birthYear}, and he is ${john.calcAge(john.birthYear)} years old.`);
  
