@@ -1,10 +1,17 @@
-const fs = require('fs');
+var fs = require('fs');
+var parse = require('csv-parse');
+var async = require('async');
+var env = process.env['USERPROFILE'];
 
-const json = fs.readFileSync(`${__dirname}/data/data.json`, 'utf-8');
+var inputFile=`${env}/Documents/Tozsde/MT4ek/Admiral2/MQL4/Files/csvStatement_27018855/manual.csv`;
 
-console.log(json);
-
-var path = require('path');
-var userName = process.env['USERPROFILE'].split(path.sep)[2];
-
-console.log(userName);
+var parser = parse({delimiter: ';'}, function (err, data) {
+  async.eachSeries(data, function (line, callback) {
+    // do something with the line
+   // doSomething(line).then(function() {
+      // when processing finishes invoke the callback to move to the next one
+      //callback();
+   // });
+  })
+});
+fs.createReadStream(inputFile).pipe(parser);
