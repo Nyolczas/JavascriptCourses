@@ -41,7 +41,7 @@ body {
 
 .top {
     height: 40vh;
-    background-image: linear-gradient(rgb(52, 99, 168), rgb(52, 94, 71));
+    background-image: linear-gradient(rgba(52, 98, 168, 0.85), rgba(52, 94, 71, 0.85)), url("forest.jpg");
     background-size: cover;
     background-position: center;
     position: relative;
@@ -57,10 +57,10 @@ body {
 }
 
 .budget__title {
-    font-size: 18px;
+    font-size: 19px;
     text-align: center;
     margin-bottom: 10px;
-    font-weight: 300;
+    font-weight: 500;
 }
 
 .budget__value {
